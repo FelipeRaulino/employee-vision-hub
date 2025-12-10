@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,6 +19,7 @@ import com.feliperaulino.employee_vision_hub.security.jwt.UserAuthenticationFilt
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
   @Autowired
   private UserAuthenticationFilter userAuthenticationFilter;
@@ -31,10 +33,9 @@ public class SecurityConfiguration {
       "/users/test"
   };
 
-  // Endpoints que só podem ser acessador por usuários com permissão de
-  // administrador
   public static final String[] ENDPOINTS_ADMIN = {
-      "/users/test/administrator"
+      "/employees",
+      "/employees/{id}"
   };
 
   @Bean
