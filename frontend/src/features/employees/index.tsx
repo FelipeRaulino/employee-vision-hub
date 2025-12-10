@@ -191,7 +191,7 @@ const Home = () => {
           selection={selectedEmployees}
           onSelectionChange={(e) => {
             if (Array.isArray(e.value)) {
-              setSelectedEmployees(e.value);
+              setSelectedEmployees(e.value as Employee[]);
             }
           }}
           selectionMode="multiple"
