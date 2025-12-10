@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: employee-vision-hub
+  datasource:
+    driver-class: org.postgresql.Driver
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+security:
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET_KEY}
