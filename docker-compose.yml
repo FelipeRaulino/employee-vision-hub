@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16.1
+    container_name: evh_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-saam}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-saam}
+      POSTGRES_DB: ${POSTGRES_DB:-employee_vision_hub}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-feliperaulino} -d ${POSTGRES_DB:-employee_vision_hub} -h localhost -p 5432",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: employees_vision_hub_api
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST:-db}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-employee_vision_hub}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-saam}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-secret}
+    ports:
+      - "${API_PORT:-8080}:8080"
+
+volumes:
+  db_data:
