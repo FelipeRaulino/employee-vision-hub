@@ -77,8 +77,7 @@ export default function EmployeeForm({
       status: values.status,
     };
 
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJlbXBsb3llZS12aXNpb24taHViLWFwaSIsImlhdCI6MTc2NTM3Mzc3OCwiZXhwIjoxNzY1Mzk1Mzc4LCJzdWIiOiJzYWFtX2FkbWluQGV4YW1wbGUuY29tIn0.o8YunLAgHnbJEMqrWQ07fP8IHhIPpFsZkgABfZOk6CU";
+    const token = localStorage.getItem("token");
 
     try {
       if (employee?.id && employee.id !== -1) {
@@ -170,7 +169,7 @@ export default function EmployeeForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="max-w-lg mx-auto rounded shadow my-4 p-4"
+      className="max-w-lg mx-auto rounded my-4 p-4"
     >
       {/* Name */}
       <label className="block mb-2 text-sm font-medium">Name</label>

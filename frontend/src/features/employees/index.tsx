@@ -41,6 +41,7 @@ const Home = () => {
   };
 
   const hideDeleteEmployeeDialog = () => {
+    setSelectedEmployees([]);
     setDeleteEmployeeDialog(false);
   };
 
@@ -50,6 +51,8 @@ const Home = () => {
 
   const confirmDeleteEmployee = (employee: Employee) => {
     setEmployee(employee);
+    selectedEmployees.push(employee);
+    setSelectedEmployees(selectedEmployees);
     setDeleteEmployeeDialog(true);
   };
 
@@ -62,17 +65,15 @@ const Home = () => {
 
     try {
       selectedEmployees.forEach(async (item) => {
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJlbXBsb3llZS12aXNpb24taHViLWFwaSIsImlhdCI6MTc2NTM3Mzc3OCwiZXhwIjoxNzY1Mzk1Mzc4LCJzdWIiOiJzYWFtX2FkbWluQGV4YW1wbGUuY29tIn0.o8YunLAgHnbJEMqrWQ07fP8IHhIPpFsZkgABfZOk6CU";
+        const token = localStorage.getItem("token");
 
-        const res = await apiClient.delete<Employee>(`/employees/${item.id}`, {
+        await apiClient.delete<Employee>(`/employees/${item.id}`, {
           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });
-
-        console.log(res);
       });
 
       setData(_employees);
+      setDeleteEmployeeDialog(false);
       setDeleteEmployeesDialog(false);
       setSelectedEmployees([]);
       toast.current?.show({
@@ -86,21 +87,42 @@ const Home = () => {
     }
   };
 
-  const deleteEmployeesDialogFooter = (
-    <React.Fragment>
+  const deleteEmployeeDialogFooter = (
+    <div className="flex gap-3">
       <Button
         label="No"
         icon="pi pi-times"
         outlined
-        onClick={hideDeleteEmployeesDialog}
+        onClick={hideDeleteEmployeeDialog}
+        className="bg-red-400 text-gray-800 px-4 py-2 rounded-md gap-2 transition-colors delay-75 ease-in hover:bg-red-500"
       />
       <Button
         label="Yes"
         icon="pi pi-check"
         severity="danger"
         onClick={deleteSelectedEmployees}
+        className="bg-green-400 text-gray-100 px-4 py-2 rounded-md gap-2 transition-colors delay-75 ease-in hover:bg-green-500"
       />
-    </React.Fragment>
+    </div>
+  );
+
+  const deleteEmployeesDialogFooter = (
+    <div className="flex gap-3">
+      <Button
+        label="No"
+        icon="pi pi-times"
+        outlined
+        onClick={hideDeleteEmployeesDialog}
+        className="bg-red-400 text-gray-800 px-4 py-2 rounded-md gap-2 transition-colors delay-75 ease-in hover:bg-red-500"
+      />
+      <Button
+        label="Yes"
+        icon="pi pi-check"
+        severity="danger"
+        onClick={deleteSelectedEmployees}
+        className="bg-green-400 text-gray-100 px-4 py-2 rounded-md gap-2 transition-colors delay-75 ease-in hover:bg-green-500"
+      />
+    </div>
   );
 
   const findIndexById = (id: number) => {
@@ -125,7 +147,7 @@ const Home = () => {
 
   const actionBodyTemplate = (rowData: Employee) => {
     return (
-      <React.Fragment>
+      <div className="flex flex-row gap-3">
         <Button
           icon="pi pi-pencil"
           rounded
@@ -140,26 +162,11 @@ const Home = () => {
           severity="danger"
           onClick={() => confirmDeleteEmployee(rowData)}
         />
-      </React.Fragment>
+      </div>
     );
   };
 
-  const deleteProductsDialogFooter = (
-    <React.Fragment>
-      <Button
-        label="No"
-        icon="pi pi-times"
-        outlined
-        onClick={hideDeleteEmployeesDialog}
-      />
-      <Button
-        label="Yes"
-        icon="pi pi-check"
-        severity="danger"
-        onClick={deleteSelectedEmployees}
-      />
-    </React.Fragment>
-  );
+  console.log(selectedEmployees);
 
   return (
     <section className="w-full flex flex-col py-6">
@@ -177,7 +184,7 @@ const Home = () => {
           </button>
           <button
             className="px-3 py-2 flex items-center gap-2 cursor-pointer bg-red-400 rounded-sm text-white 
-            text-sm transition-color delay-75 ease-in hover:bg-red-500"
+            text-sm transition-color delay-75 ease-in hover:bg-red-500 disabled:cursor-not-allowed disabled:bg-gray-200"
             onClick={confirmDeleteSelected}
             disabled={!selectedEmployees || !selectedEmployees.length}
           >
@@ -236,10 +243,10 @@ const Home = () => {
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteEmployeesDialogFooter}
+        footer={deleteEmployeeDialogFooter}
         onHide={hideDeleteEmployeeDialog}
       >
-        <div className="confirmation-content">
+        <div className="confirmation-content my-8 flex flex-col items-center gap-3">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
@@ -258,16 +265,16 @@ const Home = () => {
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteProductsDialogFooter}
+        footer={deleteEmployeesDialogFooter}
         onHide={hideDeleteEmployeesDialog}
       >
-        <div className="confirmation-content">
+        <div className="confirmation-content my-8 flex flex-col items-center gap-3">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
           {employee && (
-            <span>Are you sure you want to delete the selected products?</span>
+            <span>Are you sure you want to delete the selected employees?</span>
           )}
         </div>
       </Dialog>

@@ -14,6 +14,7 @@ import {
 } from "@/ui/components/shadcn/sidebar";
 import { IdCardLanyard, LogOut } from "lucide-react";
 import { Link, useLocation } from "react-router";
+import logoUrl from "@/assets/logo.svg";
 
 const AppSidebar = () => {
   const { pathname } = useLocation();
@@ -29,12 +30,7 @@ const AppSidebar = () => {
         <SidebarGroup>
           <SidebarGroupLabel className="rounded-none flex flex-col items-center h-auto gap-6 mt-4 mb-4">
             <div className="flex flex-col gap-2 items-center select-none">
-              <img
-                src="./src/assets/logo.svg"
-                width={30}
-                height={30}
-                alt="Logo"
-              />
+              <img src={logoUrl} width={30} height={30} alt="Logo" />
               <span className="text-base text-[#8F95FD] font-bold">
                 Employee Vision Hub
               </span>
