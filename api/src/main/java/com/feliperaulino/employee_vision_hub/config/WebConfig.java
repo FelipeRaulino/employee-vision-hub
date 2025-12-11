@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-  private final String originPatterns = " http://localhost:3000,http://localhost:8080,http://localhost:5173";
+  private final String originPatterns = "http://localhost:3000,http://localhost:8080,http://localhost:5173";
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
@@ -16,6 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
         .addMapping("/**")
         .allowedMethods("*")
         .allowedOrigins(allowedOrigins)
+        .allowedHeaders("&")
         .allowCredentials(true);
   }
 }
